@@ -78,16 +78,7 @@ SEXP eleaps(SEXP S,SEXP S2,SEXP Si,SEXP Segval,SEXP Segvct,
   	SET_VECTOR_ELT(ans, 4, Rf_ScalarInteger(optimal));
   	SET_VECTOR_ELT(ans, 5, Rf_ScalarInteger(nomemory));
 
- 	Rf_protect(ans_names = NEW_CHARACTER(6));
-  	SET_STRING_ELT(ans_names, 0, mkChar("subsets"));
-  	SET_STRING_ELT(ans_names, 1, mkChar("values"));
-  	SET_STRING_ELT(ans_names, 2, mkChar("bestvalues"));
-  	SET_STRING_ELT(ans_names, 3, mkChar("bestsets"));
-  	SET_STRING_ELT(ans_names, 4, mkChar("found"));
-  	SET_STRING_ELT(ans_names, 5, mkChar("nomemory"));
-  	Rf_setAttrib(ans, R_NamesSymbol, ans_names);
-
-	UNPROTECT(9);
+	UNPROTECT(8);
   	return(ans);
 }
 
