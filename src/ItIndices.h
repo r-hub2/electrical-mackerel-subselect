@@ -24,17 +24,17 @@ class indexbase {
 };
 
 
-class itindexd :  public indexbase {           /* Trivial d index type   */
+template<> class itindex<d> :  public indexbase {           /* Trivial d index type   */
 	public:
-		itindexd(vind n) : indexbase(n)			{ }
+		itindex<d>(vind n) : indexbase(n)			{ }
 		virtual const vind operator()(void) const		{ return cur(); }
 		virtual const vind	operator[](vind i) const	{ return i; }
 };
 
-class itindexi :  public indexbase {           /* Indirect index type    */
+template<> class itindex<i> :  public indexbase {           /* Indirect index type    */
 	public:
-		itindexi(vind n,vind* il) : indexbase(n), indlist(il) { }
-		itindexi(vind n,vector<vind>& il) : indexbase(n), indlist(&il[0]) { }
+		itindex<i>(vind n,vind* il) : indexbase(n), indlist(il) { }
+		itindex<i>(vind n,vector<vind>& il) : indexbase(n), indlist(&il[0]) { }
 		virtual const vind	operator()(void) const		{ return indlist[cur()]; }
 		virtual const vind	operator[](vind i) const	{ return indlist[i]; }
 		virtual void		asglst(vind *lst)		{ indlist = lst; }
@@ -42,9 +42,9 @@ class itindexi :  public indexbase {           /* Indirect index type    */
 		vind* indlist; 
 };
 
-class lagindexd : public itindexd  {  /* Lagged d index - implements an index offset   */
+template<> class lagindex<d> : public itindex<d>  {  /* Lagged d index - implements an index offset   */
 	public:
-		lagindexd(vind n,vind lag) : itindexd(n)		{ lag_ = lag; }
+		lagindex<d>(vind n,vind lag) : itindex<d>(n)		{ lag_ = lag; }
 		void setlag(vind lag)					{ lag_ = lag; }
 		virtual void	reset(void)				{ cur_ = 0; }
 		virtual void	reset(vind i)				{ cur_ = i-lag_; }
@@ -53,14 +53,15 @@ class lagindexd : public itindexd  {  /* Lagged d index - implements an index of
 		vind lag_;
 };
 
-class lagindexi : public itindexi  {  /* Lagged i index - implements an index offset   */
+template<> class lagindex<i> : public itindex<i>  {  /* Lagged i index - implements an index offset   */
 	public:
-		lagindexi(vind n,vind lag,vind* il) : itindexi(n,il)  { lag_ = lag; }	
-		lagindexi(const vind n,const vind lag,vector<vind>& il) : itindexi(n,il) { lag_ = lag; }
-		void setlag(vind lag)					                 { lag_ = lag; }
-		virtual void	reset(void)				                 { cur_ = 0; }
-		virtual void	reset(vind i)				                 { cur_ = i-lag_; }
-		virtual const vind	operator[](vind i) const	                 { return indlist[i-lag_]; }
+		lagindex<i>(vind n,vind lag,vind* il) : itindex<i>(n,il)  { lag_ = lag; }	
+		lagindex<i>(const vind n,const vind lag,vector<vind>& il) : itindex<i>(n,il)	
+			{ lag_ = lag; }
+		void setlag(vind lag)					{ lag_ = lag; }
+		virtual void	reset(void)				{ cur_ = 0; }
+		virtual void	reset(vind i)				{ cur_ = i-lag_; }
+		virtual const vind	operator[](vind i) const	{ return indlist[i-lag_]; }
 	protected:
 		vind lag_;
 };
