@@ -25,10 +25,10 @@ SEXP eleaps(SEXP S,SEXP S2,SEXP Si,SEXP Segval,SEXP Segvct,
 	if (!checkcolinearity) ErrMReals::errmonitreal<double>::dropec = true;   
 	else ErrMReals::errmonitreal<double>::dropec = false;   
 
-   	Rf_protect(subsets = Rf_allocVector(INTSXP,nsol1*kmax1*klength));
-   	Rf_protect(values = Rf_allocVector(REALSXP,nsol1*klength));
-   	Rf_protect(bestsets = Rf_allocVector(INTSXP,kmax1*klength));
-   	Rf_protect(bestvalues = Rf_allocVector(REALSXP,klength));
+   	PROTECT(subsets = allocVector(INTSXP,nsol1*kmax1*klength));
+   	PROTECT(values = allocVector(REALSXP,nsol1*klength));
+   	PROTECT(bestsets = allocVector(INTSXP,kmax1*klength));
+   	PROTECT(bestvalues = allocVector(REALSXP,klength));
 
 	int retcode = extendedleaps::callsscma(
 		REAL(S),REAL(S2),REAL(Si),REAL(Segval),REAL(Segvct),
@@ -53,32 +53,41 @@ SEXP eleaps(SEXP S,SEXP S2,SEXP Si,SEXP Segval,SEXP Segvct,
 		Rprintf("of the function argument maxaperr but the numerical accuracy of results may be compromised\n\n");
 	}
 
-   	Rf_protect(dimsub = Rf_allocVector(INTSXP,3));
+   	PROTECT(dimsub = allocVector(INTSXP,3));
    	INTEGER(dimsub)[0] = nsol1;
    	INTEGER(dimsub)[1] = kmax1;
     	INTEGER(dimsub)[2] = klength;
   	SET_DIM(subsets,dimsub); 
 
-   	Rf_protect(dimval = Rf_allocVector(INTSXP,2));
+   	PROTECT(dimval = allocVector(INTSXP,2));
    	INTEGER(dimval)[0] = nsol1;
     	INTEGER(dimval)[1] = klength;
   	SET_DIM(values,dimval); 
   	
-   	Rf_protect(dimbsets = Rf_allocVector(INTSXP,2));
+   	PROTECT(dimbsets = allocVector(INTSXP,2));
    	INTEGER(dimbsets)[0] = klength;
     	INTEGER(dimbsets)[1] = kmax1; 
   	SET_DIM(bestsets,dimbsets); 
 
-  	Rf_protect(ans = NEW_LIST(6));
+  	PROTECT(ans = NEW_LIST(6));
 
  	SET_VECTOR_ELT(ans, 0, subsets);
   	SET_VECTOR_ELT(ans, 1, values);
   	SET_VECTOR_ELT(ans, 2, bestvalues);
   	SET_VECTOR_ELT(ans, 3, bestsets);
-  	SET_VECTOR_ELT(ans, 4, Rf_ScalarInteger(optimal));
-  	SET_VECTOR_ELT(ans, 5, Rf_ScalarInteger(nomemory));
+  	SET_VECTOR_ELT(ans, 4, ScalarInteger(optimal));
+  	SET_VECTOR_ELT(ans, 5, ScalarInteger(nomemory));
 
-	UNPROTECT(8);
+ 	PROTECT(ans_names = NEW_CHARACTER(6));
+  	SET_STRING_ELT(ans_names, 0, mkChar("subsets"));
+  	SET_STRING_ELT(ans_names, 1, mkChar("values"));
+  	SET_STRING_ELT(ans_names, 2, mkChar("bestvalues"));
+  	SET_STRING_ELT(ans_names, 3, mkChar("bestsets"));
+  	SET_STRING_ELT(ans_names, 4, mkChar("found"));
+  	SET_STRING_ELT(ans_names, 5, mkChar("nomemory"));
+  	setAttrib(ans, R_NamesSymbol, ans_names);
+
+	UNPROTECT(9);
   	return(ans);
 }
 

@@ -7,11 +7,11 @@ eleaps<-function(mat,kmin=length(include)+1,kmax=ncol(mat)-length(exclude)-1,nso
 # auxiliary  variables        #
 ###############################
 
-	p <- ncol(mat)    				                # Number of original variables
-	nexclude <- length(exclude)     		      # Number of excluded variables
-	ninclude <- length(include)     		      # Number of included variables
+	p <- ncol(mat)    				# Number of original variables
+	nexclude <- length(exclude)     		# Number of excluded variables
+	ninclude <- length(include)     		# Number of included variables
 	if (pcindices[1]!="first_k") esp <- TRUE	# The user has specified the set of Principal Components to be used with the GCD criterion
-	else esp <- FALSE				                  # The user has not specified the set of Principal Components to be used with the GCD criterion
+	else esp <- FALSE				# The user has not specified the set of Principal Components to be used with the GCD criterion
 
         
 ###############################
@@ -140,7 +140,7 @@ eleaps<-function(mat,kmin=length(include)+1,kmax=ncol(mat)-length(exclude)-1,nso
            as.double(BartPival),
            as.double(LawHotval),
            as.double(CCR12val),
-	         as.integer(r),
+	   as.integer(r),
            as.integer(kmin),
            as.integer(kmax),
            as.integer(nsol),
@@ -153,12 +153,11 @@ eleaps<-function(mat,kmin=length(include)+1,kmax=ncol(mat)-length(exclude)-1,nso
            as.integer(pcindices),
            as.integer(length(pcindices)),
            as.integer(p),
-	         as.double(timelimit),
-	         as.double(maxaperr), 	    
-	         as.logical(singularmat), 	    
+	   as.double(timelimit),
+	   as.double(maxaperr), 	    
+	   as.logical(singularmat), 	    
            PACKAGE="subselect"   
         ) 
-	names(Cout) <- c("subsets","values","bestvalues","bestsets","found","nomemory")
 	if (Cout$nomemory == TRUE) return(NULL)
 
 #######################################
@@ -169,3 +168,4 @@ eleaps<-function(mat,kmin=length(include)+1,kmax=ncol(mat)-length(exclude)-1,nso
 	 if (is.null(output)) return(invisible(NA))
 	 output   # return(output)
 }
+
